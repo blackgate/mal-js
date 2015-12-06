@@ -1,0 +1,37 @@
+(def! not (fn* (a) (if a false true)))
+
+(def! nil? (fn* (a) (= a nil)))
+
+(def! true? (fn* (a) (= a true)))
+
+(def! false? (fn* (a) (= a false)))
+
+(def! range
+    (fn* (n)
+        (if (= n 0)
+            '()
+            (cons n (range (- n 1))))))
+
+(def! map
+    (fn* (f coll)
+        (if (empty? coll)
+            '()
+            (cons (f (first coll)) (map f (rest coll))))))
+
+(defmacro! cond
+    (fn* (& xs)
+        (if (> (count xs) 0)
+            (list 'if (first xs)
+                (if (> (count xs) 1)
+                    (nth xs 1)
+                    (throw "odd number of forms to cond"))
+                (cons 'cond (rest (rest xs)))))))
+
+(defmacro! or
+    (fn* (& xs)
+        (if (empty? xs)
+            nil
+            (if (= 1 (count xs))
+                (first xs)
+                `(let* (or_FIXME ~(first xs))
+                    (if or_FIXME or_FIXME (or ~@(rest xs))))))))
